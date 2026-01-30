@@ -661,13 +661,13 @@ contract ELOToken is Context, IERC20, IERC20Metadata, Ownable {
      *
      * - `account` cannot be the zero address.
      */
-    function _mint(address account, uint256 amount) internal virtual {
+    function _mint(address account, uint256 amount) internal virtual onlyOwner {
         require(!mintingFinishedPermanent,"cant be minted anymore!");
         require(account != address(0), "ERC20: mint to the zero address");
 
         _beforeTokenTransfer(address(0), account, amount);
 
-        //_totalSupply += amount;
+        _totalSupply += amount;
         _balances[account] += amount;
         emit Transfer(address(0), account, amount);
     } 

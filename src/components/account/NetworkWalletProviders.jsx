@@ -67,6 +67,7 @@ const NetworkWalletProviders = ({
   const { loginMetamask, loginWalletConnect } = useWalletConnector();
   const [selectedNetwork, setSelectedNetwork] = useState(null);
   const [selectedWallet, setSelectedWallet] = useState(null);
+  const [mmError, setMmError] = useState('');
 
   const handleSelectNetwork = (network) => {
     setSelectedNetwork(network);
@@ -83,12 +84,19 @@ const NetworkWalletProviders = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [library, account]);
 
-  const handleConnectWallet = () => {
-    if (selectedWallet && selectedNetwork) {
-      const walletprovider = `${selectedWallet}_${selectedNetwork}`;
+const handleConnectWallet = () => {
+  if (!selectedWallet || !selectedNetwork) return;
+  console.log("1234",selectedWallet,window.ethereum)
+
+  // MetaMask selected but not installed
+  if (selectedWallet === 'injected' && (!window.ethereum || !window.ethereum.isMetaMask)) {
+    alert('MetaMask is not installed. Please install MetaMask to continue.');
+    return;
+  }
+
+     const walletprovider = `${selectedWallet}_${selectedNetwork}`;
       connectWallet(walletprovider);
-    }
-  };
+};
 
   const connectWallet = async (walletprovider) => {
     localStorage.setItem('connected', true);
@@ -267,8 +275,8 @@ const NetworkWalletProviders = ({
       <DialogActions>
         <Button
           fullWidth
-          // onClick={handleConnectWallet}
-          onClick={handleOpen}
+          onClick={handleConnectWallet}
+          // onClick={handleOpen}
           disabled={!selectedNetwork || !selectedWallet}
         >
           Connect

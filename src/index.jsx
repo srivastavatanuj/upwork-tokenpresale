@@ -7,7 +7,7 @@ import { MoralisDappProvider } from './providers/MoralisDappProvider/MoralisDapp
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Web3ReactProvider } from '@web3-react/core';
-import { ethers } from 'ethers';
+import { ethers,BrowserProvider } from 'ethers';
 
 const theme = createTheme({
   palette: {
@@ -42,10 +42,10 @@ const theme = createTheme({
 const POLLING_INTERVAL = 12000;
 
 const getLibrary = (provider) => {
-  const library = new ethers.providers.Web3Provider(provider);
-  library.pollingInterval = POLLING_INTERVAL;
-  return library;
+  if (!provider) return null;
+  return new BrowserProvider(provider);
 };
+
 
 const APP_ID = 'DYFU90AwvC6Ktjxrr31VdJNhAV5UadWBr97duwex';
 const SERVER_URL = 'https://gq7x7ofh7pyg.usemoralis.com:2053/server';
